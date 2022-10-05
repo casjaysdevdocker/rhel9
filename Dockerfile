@@ -1,4 +1,4 @@
-FROM casjaysdevdocker/alpine:latest as build
+FROM rockylinux:9 AS build
 
 ARG LICENSE=WTFPL \
   IMAGE_NAME=rhel9 \
