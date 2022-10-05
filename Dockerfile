@@ -12,7 +12,7 @@ ENV SHELL=/bin/bash \
 
 RUN mkdir -p /bin/ /config/ /data/ && \
   rm -Rf /bin/.gitkeep /config/.gitkeep /data/.gitkeep && \
-  apk update -U --no-cache
+  yum update -y
 
 COPY ./bin/. /usr/local/bin/
 COPY ./config/. /config/
