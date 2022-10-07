@@ -97,6 +97,7 @@ fi
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Additional commands
 [ -f "/config/rpmmacros" ] && cp -Rf "/config/rpmmacros" "/root/.rpmmacros"
+SPEC_FILES="$(ls -A "RPM_SOURCE_DIR"/*/*.spec 2>/dev/null | grep '^' || echo '')"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 case "$1" in
 --help) # Help message
@@ -120,8 +121,11 @@ healthcheck) # Docker healthcheck
   ;;
 
 *) # Execute primary command
-  if [ $# -eq 0 ]; then
-    __exec_bash "/bin/bash"
+  if [ $# -eq 0 ] && [ -n "$SPEC_FILES" ]; then
+    for spec in $SPEC_FILES; do
+      echo "Installing dependencies and building $spec"
+      yum-builddep "$spec" && rpmbuild -ba "$spec"
+    done
   else
     __exec_bash "/bin/bash"
   fi
