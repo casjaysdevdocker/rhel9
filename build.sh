@@ -24,6 +24,8 @@ RUN_USER="${SUDO_USER:-$USER}"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Set variables
 build_platforms="linux/amd64,linux/arm64"
+hub_username="casjaysdevdocker"
+release="9"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Main application
 if docker buildx 2>&1 | grep -q 'docker buildx COMMAND'; then
@@ -35,8 +37,8 @@ if docker buildx 2>&1 | grep -q 'docker buildx COMMAND'; then
       --no-cache \
       --progress auto \
       --output=type=registry \
-      -t casjaysdevdocker/rhel9:latest \
-      -t casjaysdevdocker/rpm-devel:9 \
+      -t $hub_username/rhel$release:latest \
+      -t $hub_username/rpm-devel:$release \
       -f "$PWD/Dockerfile" .
       exit $?
 else
@@ -46,11 +48,13 @@ else
       --pull \
       --force-rm \
       --no-cache \
-      -t casjaysdevdocker/rhel9:latest \
-      -t casjaysdevdocker/rpm-devel:9
+      -t $hub_username/rhel$release:latest \
+      -t $hub_username/rpm-devel:$release
       if [ "$?" = 0 ]; then
-        sudo docker push casjaysdevdocker/rhel9:latest
-        sudo docker push casjaysdevdocker/rpm-devel:9
+        sudo docker push $hub_username/rhel$release:latest
+        sudo docker push $hub_username/rpm-devel:$release
+        sudo docker rmi -f $hub_username/rhel$release:latest
+        sudo docker rmi -f $hub_username/rpm-devel:$release
       fi
       exit $?
 fi
