@@ -9,11 +9,11 @@
 # @@Copyright        :  Copyright: (c) 2022 Jason Hempstead, Casjays Developments
 # @@Created          :  Wednesday, Oct 05, 2022 11:38 EDT
 # @@File             :  entrypoint-rhel9.sh
-# @@Description      :  
+# @@Description      :
 # @@Changelog        :  New script
 # @@TODO             :  Better documentation
-# @@Other            :  
-# @@Resource         :  
+# @@Other            :
+# @@Resource         :
 # @@Terminal App     :  no
 # @@sudo/root        :  no
 # @@Template         :  other/docker-entrypoint
@@ -53,9 +53,11 @@ BIN_DIR="${BIN_DIR:-/usr/local/bin}"
 DATA_DIR="${DATA_DIR:-$(__find /data/ 2>/dev/null | grep '^' || false)}"
 CONFIG_DIR="${CONFIG_DIR:-$(__find /config/ 2>/dev/null | grep '^' || false)}"
 CONFIG_COPY="${CONFIG_COPY:-false}"
+RPM_SOURCE_DIR="${RPM_SOURCE_DIR:-/data/rpmbuild}"
+RPM_RELEASE_DIR="${RPM_RELEASE_DIR:-/data/release}"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Additional variables
-
+export RPM_SOURCE_DIR RPM_RELEASE_DIR
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Export variables
 export TZ HOSTNAME
@@ -94,7 +96,7 @@ fi
 [ -f "/etc/.env.sh" ] && rm -Rf "/etc/.env.sh"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Additional commands
-
+[ -f "/config/rpmmacros" ] && cp -Rf "/config/rpmmacros" "/root/.rpmmacros"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 case "$1" in
 --help) # Help message

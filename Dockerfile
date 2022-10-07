@@ -8,7 +8,9 @@ ARG LICENSE=WTFPL \
 ENV SHELL=/bin/bash \
   TERM=xterm-256color \
   HOSTNAME=${HOSTNAME:-casjaysdev-$IMAGE_NAME} \
-  TZ=$TIMEZONE
+  TZ=$TIMEZONE \
+  RPM_SOURCE_DIR="/data/rpmbuild" \
+  RPM_RELEASE_DIR="/data/release"
 
 RUN mkdir -p /bin/ /config/ /data/ && \
   rm -Rf /bin/.gitkeep /config/.gitkeep /data/.gitkeep && \
@@ -16,6 +18,7 @@ RUN mkdir -p /bin/ /config/ /data/ && \
   yum update -y && \
   yum groupinstall "Development Tools" "RPM Development Tools" -y
 
+COPY ./config/rpmmacros /root/.rpmmacros
 COPY ./bin/. /usr/local/bin/
 COPY ./config/. /config/
 COPY ./data/. /data/
@@ -43,7 +46,7 @@ ENV SHELL="/bin/bash" \
 
 WORKDIR /root
 
-VOLUME ["/root","/config","/data"]
+VOLUME ["/root","/config","/data/rpmbuild","/data/release"]
 
 EXPOSE $PORT
 
