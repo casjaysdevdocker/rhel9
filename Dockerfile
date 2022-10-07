@@ -14,9 +14,13 @@ ENV SHELL=/bin/bash \
 
 RUN mkdir -p /bin/ /config/ /data/ && \
   rm -Rf /bin/.gitkeep /config/.gitkeep /data/.gitkeep && \
-  wget -q "https://github.com/rpm-devel/casjay-release/raw/main/casjay.rh9.repo" -O "/etc/yum.repos.d/casjay.repo"
   yum update -y && \
-  yum groupinstall "Development Tools" "RPM Development Tools" -y
+  yum install wget curl -y && \
+  yum clean all && \
+  wget -q "https://github.com/rpm-devel/casjay-release/raw/main/casjay.rh9.repo" -O "/etc/yum.repos.d/casjay.repo" && \
+  yum update -y && \
+  yum groupinstall "Development Tools" "RPM Development Tools" -y && \
+  yum clean all
 
 COPY ./config/rpmmacros /root/.rpmmacros
 COPY ./bin/. /usr/local/bin/

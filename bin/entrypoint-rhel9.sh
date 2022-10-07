@@ -97,6 +97,15 @@ fi
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Additional commands
 [ -f "/config/rpmmacros" ] && cp -Rf "/config/rpmmacros" "/root/.rpmmacros"
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+if [ -f "/config/source_list.txt" ]; then
+  for url in $(cat "/config/source_list.txt" | grep '^'); do
+    if [ "$url" != "" ]; then
+      name="$(basename "$url")"
+      git clone "$url" "$name" 1>/dev/null
+    fi
+  done
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SPEC_FILES="$(ls -A "RPM_SOURCE_DIR"/*/*.spec 2>/dev/null | grep '^' || echo '')"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 case "$1" in
