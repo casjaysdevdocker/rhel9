@@ -26,6 +26,7 @@ RUN_USER="${SUDO_USER:-$USER}"
 build_platforms="linux/amd64,linux/arm64"
 hub_username="casjaysdevdocker"
 release="9"
+arguments="$@"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Main application
 if docker buildx 2>&1 | grep -q 'docker buildx COMMAND'; then
@@ -38,8 +39,8 @@ if docker buildx 2>&1 | grep -q 'docker buildx COMMAND'; then
       --progress auto \
       --output=type=registry \
       -t $hub_username/rhel$release:latest \
-      -t $hub_username/rpm-devel:$release \
-      -f "$PWD/Dockerfile" .
+      -t $hub_username/rpm-devel:$release $arguments \
+      -f "$PWD/Dockerfile" "$PWD"
       exit $?
 else
   echo "Building docker image with docker"
@@ -49,7 +50,7 @@ else
       --force-rm \
       --no-cache \
       -t $hub_username/rhel$release:latest \
-      -t $hub_username/rpm-devel:$release
+      -t $hub_username/rpm-devel:$release $arguments "$PWD"
       if [ "$?" = 0 ]; then
         sudo docker push $hub_username/rhel$release:latest
         sudo docker push $hub_username/rpm-devel:$release
