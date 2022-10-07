@@ -12,7 +12,9 @@ ENV SHELL=/bin/bash \
 
 RUN mkdir -p /bin/ /config/ /data/ && \
   rm -Rf /bin/.gitkeep /config/.gitkeep /data/.gitkeep && \
-  yum update -y
+  wget -q "https://github.com/rpm-devel/casjay-release/raw/main/casjay.rh9.repo" -O "/etc/yum.repos.d/casjay.repo"
+  yum update -y && \
+  yum groupinstall "Development Tools" "RPM Development Tools" -y
 
 COPY ./bin/. /usr/local/bin/
 COPY ./config/. /config/
